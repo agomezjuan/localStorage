@@ -17,8 +17,13 @@ window.addEventListener('load', function(){
     form.addEventListener('submit', function(e){
         e.preventDefault()
         
-        realizarComentario(comentario.value)
-        guardarComentarios(comentario.value)
+        if (comentario.value != "") {
+            realizarComentario(comentario.value)
+            guardarComentarios(comentario.value)
+        } else {
+            alert('Los comentarios no pueden estar vacíos')
+            comentario.focus()
+        }
     })
     
     function realizarComentario(textoComentario) {
