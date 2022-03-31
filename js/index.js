@@ -26,6 +26,7 @@ window.addEventListener('load', function(){
         let p = document.createElement('p')
         p.innerHTML = textoComentario
         comentarios.insertAdjacentElement('afterbegin', p)
+        comentario.value = ""
     }
     
     function guardarComentarios(comentario) {
