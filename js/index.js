@@ -8,52 +8,76 @@ REQUERIMIENTOS
 
 - constantemente guardar la informacion en localStorage, si se recarga la pagina deberian mantenerse los comentarios
 */
-window.addEventListener('load', function(){
-    let todosLosComentarios = obtenerComentarios()
-    
-    let form = document.forms[0]
-    let comentario = document.querySelector('#comentario')
-    
-    form.addEventListener('submit', function(e){
-        e.preventDefault()
-        
-        if (comentario.value != "") {
-            realizarComentario(comentario.value)
-            guardarComentarios(comentario.value)
-        } else {
-            alert('Los comentarios no pueden estar vacíos')
-            comentario.focus()
-        }
-    })
-    
-    function realizarComentario(textoComentario) {
-        let comentarios = document.querySelector('.comentarios')
-        let p = document.createElement('p')
-        p.innerHTML = textoComentario
-        comentarios.insertAdjacentElement('afterbegin', p)
-        comentario.value = ""
-    }
-    
-    function guardarComentarios(comentario) {
-        todosLosComentarios.push(comentario)
-        localStorage.setItem('comentariosViejos', JSON.stringify(todosLosComentarios))
-    }
-    
-    function obtenerComentarios() {
-        let todosLosComentarios = JSON.parse(localStorage.getItem('comentariosViejos'))
+window.addEventListener("load", function () {
+  // CONSTANTES
+  const form = document.forms[0];
+  const comentarios = document.querySelector(".comentarios");
+  const comentario = document.querySelector("#comentario");
+  const btnBorrar = this.document.querySelector("#borrar");
+  const todosLosComentarios = obtenerComentarios();
 
-        if (!todosLosComentarios) {
-            todosLosComentarios = []
-        } else {
+  // EVENTO ENVIAR FORMULARIO
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
 
-            let div = document.querySelector('.comentarios')
-            todosLosComentarios.forEach(comentario => {
-            let p = document.createElement('p')
-            p.innerHTML = comentario
-            div.insertAdjacentElement('afterbegin', p)
-        });
-
-        }
-        return todosLosComentarios
+    if (comentario.value != "") {
+      realizarComentario(comentario.value);
+      guardarComentarios(comentario.value);
+    } else {
+      alert("Los comentarios no pueden estar vacíos");
+      comentario.focus();
     }
-})
+  });
+
+  // EVENTO BORRAR TODOS LOS COMENTARIOS
+  btnBorrar.addEventListener("click", function () {
+    const confirmacion = confirm(
+      "¿Seguro que quieres borrar todos los comentarios?\nEsta operación no se puede deshacer"
+    );
+
+    if (confirmacion) {
+      borrarComentarios();
+      comentarios.innerHTML = "";
+    }
+  });
+
+  // ESCRIBIR COMENTARIO
+  function realizarComentario(textoComentario) {
+    const p = document.createElement("p");
+    p.innerHTML = textoComentario;
+    comentarios.insertAdjacentElement("afterbegin", p);
+    form.reset();
+  }
+
+  // GUARDAR COMENTARIOS EN LOCAL STORAGE
+  function guardarComentarios(comentario) {
+    todosLosComentarios.push(comentario);
+    localStorage.setItem(
+      "comentariosViejos",
+      JSON.stringify(todosLosComentarios)
+    );
+  }
+
+  // OBTENER COMENTARIOS DEL LOCAL STORAGE
+  function obtenerComentarios() {
+    let todosLosComentarios = JSON.parse(
+      localStorage.getItem("comentariosViejos")
+    );
+
+    if (!todosLosComentarios) {
+      todosLosComentarios = [];
+    } else {
+      todosLosComentarios.forEach((comentario) => {
+        const p = document.createElement("p");
+        p.innerHTML = comentario;
+        div.insertAdjacentElement("afterbegin", p);
+      });
+    }
+    return todosLosComentarios;
+  }
+
+  // BORRAR TODOS LOS COMENTARIOS
+  function borrarComentarios() {
+    localStorage.removeItem("comentariosViejos");
+  }
+});
